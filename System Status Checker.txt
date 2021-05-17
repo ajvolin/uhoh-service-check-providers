@@ -33,7 +33,6 @@ Service checks
 			- Row count
 			- Table exists
 			- Database exists
-
 	FTP
 		- Connection
 		- Contents
@@ -67,6 +66,8 @@ Structure:
 		- id, name, description, enabled, private
 		Services Categories
 			- service_id, category_id
+		Dependent Services
+			- service_id, depends_on_service_id
 		Service Checks
 			- id, service_id, name, description, check_type, enabled, configuration, skip_until
 			Service Check Groups
