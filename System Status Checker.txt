@@ -1,0 +1,157 @@
+Service checks
+	Ping/ICMP
+	HTTP/HTTPS
+		- Connection
+		- HTTP request
+			- Method
+			- Parameters / body
+			- Authentication
+			- SNI
+		- Response
+			- Response type
+			- Status code
+			- Contents
+			- SSL/TLS Cert
+				- Valid / matches host name
+				- Info / Expiration
+				- Ciphers
+					- Show insecure ciphers
+	DNS
+		- Connection
+		- Lookup
+	LDAP/LDAPS
+		- Connection
+		- Query
+			- Object counts
+	Database - mssql, oracle, postgres, mysql/mariadb
+		- Connection
+			- Login
+		- SQL Server Agent
+			- Job
+			- Job Status
+		- Query
+			- Row count
+			- Table exists
+			- Database exists
+
+	FTP
+		- Connection
+		- Contents
+	SSH
+		- Connection
+		- Key matches
+	Telnet
+		- Connection
+	Email
+		- SMTP
+			- Connection
+			- Send mail
+		- EWS
+			- Connection
+			- Status
+		- Office 365
+			- Twitter Feed
+		- POP3
+			- Connection
+		- IMAP
+			- Connection
+	NTP
+		- Connection
+		- Time
+
+
+Structure:
+	Service Categories
+		- id, name, description
+	Services
+		- id, name, description, enabled, private
+		Services Categories
+			- service_id, category_id
+		Service Checks
+			- id, service_id, name, description, check_type, enabled, configuration, skip_until
+			Service Check Groups
+				- id, service_check_id, error_impact, warning_impact
+			Service Check Logs
+				- id, service_check_id, status, response, acknowledged_at, acknowledged_by
+		Service Maintenance
+			- id, service_id, service_check_id, name, description, starts_at, ends_at, service_impact, skip_checks, private
+		Service Alert Subscriptions
+			- id, service_id, service_check_id, notifiable_id, notifiable_type, notification_type, enabled
+	Service Alert Contacts
+		- id, first_name, last_name, email, description
+	Notifiable
+		- notifiable_id, notifiable_type, method, data
+
+
+ServiceCheckProviders Class implements Arrayable, Jsonable
+	- private array $serviceCheckProviders = [];
+	- registerProvider(ServiceCheckProvider $provider): void
+	- getProvider(string $provider): ServiceCheckProvider
+	- getProviders(): array
+	- toArray(): array
+	- toJson(): string
+
+ServiceCheckProvider Class
+	- private string $name
+	- private string $displayName
+	- private CheckableService $serviceCheckClass
+	- private ServiceCheckProviderConfigurationFields $configurationFields
+	- getName(): string
+	- getDisplayName(): string
+	- getServiceCheckClass(): CheckableService
+	- getConfigurationFields(): ServiceCheckProviderConfigurationFields
+
+ServiceCheckProviderConfigurationField Class
+	- private string $type
+	- 
+
+ServiceCheckProviderConfigurationFields Class implements Arrayable, Jsonable
+	- private array $configurationFields
+	- __construct(array $configurationFields)
+	- getConfigurationFields(): array
+	- toArray(): array
+	- toJson(): string
+
+ServiceCheckProviderConfiguration Class implements Arrayable, Jsonable
+	- private array $configuration
+	- __construct(array $configuration)
+	- getConfiguration(): array
+	- toArray(): array
+	- toJson(): string
+
+CheckableService Interface/Contract
+	- fire(ServiceCheckProviderConfiguration $configuration): ServiceCheckResponse
+
+ServiceCheckResponseDetails Class implements Arrayable, Jsonable
+	- private array $responseDetails
+	- __construct($responseDetails)
+	- getResponseDetails(): array
+	- addResponseDetail($ServiceCheckResponseDetail $detail): void
+	- toArray(): array
+	- toJson(): string
+
+ServiceCheckResponseDetail Class implements Arrayable, Jsonable
+	- private string $name
+	- private string $detail
+	- __construct(string $name, string $detail)
+	- getName(): string
+	- getDetail(): string
+	- toArray(): array
+	- toJson(): string
+
+ServiceCheckResponse Class implements Arrayable, Jsonable
+	- private int $status
+	- private string $formattedResponse
+	- private string $rawResponse
+	- private ?ServiceCheckResponseDetails $responseDetails
+	- __construct(int $status, string $formattedResponse, string $rawResponse, ?ServiceCheckResponseDetails $responseDetails = null)
+	- getStatus(): int
+	- getRawResponse(): string
+	- getResponseDetails(): ServiceCheckResponseDetails
+	- toArray(): array
+	- toJson(): string
+
+ServiceCheckException
+ServiceCheckRequestException
+ServiceCheckResponseException
+ServiceCheckConfigurationException
