@@ -1,17 +1,17 @@
 <?php
 
-namespace UhOh\ServiceCheckProvider\Models;
+namespace UhOh\ServiceCheckProvider\Result;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 
 /**
- * Class ServiceCheckResultDetail
+ * Class ResultDetail
  * @package UhOh/ServiceCheckProviders
  *
  */
 
-class ServiceCheckResultDetail implements Arrayable, Jsonable
+class ResultDetail implements Arrayable, Jsonable
 {
     /**
      * The name of the detail
@@ -28,7 +28,7 @@ class ServiceCheckResultDetail implements Arrayable, Jsonable
 	private string $detail;
     
     /**
-     * ServiceCheckResultDetail constructor.
+     * ResultDetail constructor.
      *
      * @param string $name The name of the detail
      * @param string $detail The value of the detail
@@ -67,12 +67,10 @@ class ServiceCheckResultDetail implements Arrayable, Jsonable
      */
 	public function toArray(): array
     {
-        $arr = [
+        return [
             'name' => $this->name,
             'detail' => $this->detail
         ];
-
-        return $arr;
     }
 
     /**

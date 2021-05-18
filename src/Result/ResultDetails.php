@@ -1,41 +1,41 @@
 <?php
 
-namespace UhOh\ServiceCheckProvider\Models;
+namespace UhOh\ServiceCheckProvider\Result;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use UhOh\ServiceCheckProvider\Exceptions\ServiceCheckResultDetailError;
-use UhOh\ServiceCheckProvider\Models\ServiceCheckResultDetail;
+use UhOh\ServiceCheckProvider\Result\ResultDetail;
 
 /**
- * Class ServiceCheckResultDetails
+ * Class ResultDetails
  * @package UhOh/ServiceCheckProviders
  *
  */
 
-class ServiceCheckResultDetails implements Arrayable, Jsonable
+class ResultDetails implements Arrayable, Jsonable
 {
     /**
      * Array of service check result details
      * 
-     * @var ServiceCheckResultDetail[]
+     * @var ResultDetail[]
      */
-    private array $serviceCheckResultDetails;
+    private array $ResultDetails;
     
     /**
-     * ServiceCheckResultDetails constructor.
+     * ResultDetails constructor.
      *
-     * @param ServiceCheckResultDetail[] $serviceCheckResultDetails Array of details
+     * @param ResultDetail[] $ResultDetails Array of details
      */
-    public function __construct(?array $serviceCheckResultDetails = null)
+    public function __construct(?array $ResultDetails = null)
     {
-        if (!is_null($serviceCheckResultDetails)) {
-            foreach($serviceCheckResultDetails as $detail) {
-                if($detail instanceof ServiceCheckResultDetail) {
-                    array_push($this->serviceCheckResultDetails, $detail);
+        if (!is_null($ResultDetails)) {
+            foreach($ResultDetails as $detail) {
+                if($detail instanceof ResultDetail) {
+                    array_push($this->ResultDetails, $detail);
                 } else {
                     throw new ServiceCheckResultDetailError(
-                        "Detail in serviceCheckResultDetails array is not an instance of ServiceCheckResultDetail."
+                        "Detail in ResultDetails array is not an instance of ResultDetail."
                     );
                 }
             }
@@ -47,9 +47,9 @@ class ServiceCheckResultDetails implements Arrayable, Jsonable
      * 
      * @return int
      */
-	public function addResultDetail(ServiceCheckResultDetail $detail): void
+	public function addResultDetail(ResultDetail $detail): void
     {
-        array_push($this->serviceCheckResultDetails, $detail);
+        array_push($this->ResultDetails, $detail);
     }
 
     /**
@@ -59,7 +59,7 @@ class ServiceCheckResultDetails implements Arrayable, Jsonable
      */
 	public function getResultDetails(): array
     {
-        return $this->serviceCheckResultDetails;
+        return $this->ResultDetails;
     }
 
     /**
@@ -71,7 +71,7 @@ class ServiceCheckResultDetails implements Arrayable, Jsonable
     {
         $arr = [];
 
-        foreach ($this->serviceCheckResultDetails as $detail) {
+        foreach ($this->ResultDetails as $detail) {
             array_push($arr, $detail->toArray());
         }
 

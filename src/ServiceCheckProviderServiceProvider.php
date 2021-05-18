@@ -5,7 +5,7 @@ namespace UhOh\ServiceCheckProvider;
 use UhOh\ServiceCheckProvider\ServiceCheckProviders;
 use Illuminate\Support\ServiceProvider;
 
-class ChannelsBuddySourceServiceProvider extends ServiceProvider
+class ServiceCheckProviderServiceProvider extends ServiceProvider
 {
     /**
      * Register the ServiceCheckProviders singleton

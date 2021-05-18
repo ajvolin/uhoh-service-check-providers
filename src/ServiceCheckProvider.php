@@ -16,7 +16,7 @@ class ServiceCheckProvider implements Arrayable, Jsonable
     /**
      * @var string
      */
-    private string $serviceCheckProviderServiceClass;
+    private string $serviceClass;
 
     /**
      * @var string
@@ -24,29 +24,29 @@ class ServiceCheckProvider implements Arrayable, Jsonable
     private string $displayName;
 
     /**
-     * @var ServiceCheckProviderConfigurationFields
+     * @var ConfigurationFields
      */
-    private ServiceCheckProviderConfigurationFields $configurationFields;
+    private ConfigurationFields $configurationFields;
 
     /**
      * @var CheckableService
      */
-    private CheckableService $serviceCheckProviderService;
+    private CheckableService $service;
 
     /**
      * ServiceCheckProvider constructor.
      * @param string $name The name of the service check provider
-     * @param string $serviceCheckProviderServiceClass The name of the class implementing the CheckableService contract
+     * @param string $serviceClass The name of the class implementing the CheckableService contract
      * @param string $displayName The display name for the service check provider
-     * @param ServiceCheckProviderConfigurationFields $configurationFields The configuration fields for the service check provider
+     * @param ConfigurationFields $configurationFields The configuration fields for the service check provider
      */
     public function __construct(string $name,
-                                string $serviceCheckProviderServiceClass,
+                                string $serviceClass,
                                 string $displayName,
-                                ServiceCheckProviderConfigurationFields $configurationFields)
+                                ConfigurationFields $configurationFields)
     {
         $this->name = $name;
-        $this->serviceCheckProviderServiceClass = $serviceCheckProviderServiceClass;
+        $this->serviceClass = $serviceClass;
         $this->displayName = $displayName;
         $this->configurationFields = $configurationFields;
     }
@@ -56,13 +56,13 @@ class ServiceCheckProvider implements Arrayable, Jsonable
      *
      * @return CheckableService
      */
-    public function getServiceCheckProviderService(): CheckableService
+    public function getService(): CheckableService
     {
-        if (!isset($this->serviceCheckProviderService)) {
-            $this->serviceCheckProviderService = new $this->serviceCheckProviderServiceClass;
+        if (!isset($this->service)) {
+            $this->service = new $this->serviceClass;
         }
          
-        return $this->serviceCheckProviderService;
+        return $this->service;
     }
 
     /**
@@ -88,9 +88,9 @@ class ServiceCheckProvider implements Arrayable, Jsonable
     /**
      * Returns the configuration fields for the service check provider
      *
-     * @return ServiceCheckProviderConfigurationFields
+     * @return ConfigurationFields
      */
-    public function getConfigurationFields(): ServiceCheckProviderConfigurationFields
+    public function getConfigurationFields(): ConfigurationFields
     {
         return $this->configurationFields;
     }
@@ -103,7 +103,7 @@ class ServiceCheckProvider implements Arrayable, Jsonable
     public function toArray(): array
     {
         return [
-            'name' => $this->sourceName,
+            'name' => $this->name,
             'display_name' => $this->displayName,
             'configuration_fields' => $this->configurationFields
         ];

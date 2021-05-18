@@ -1,9 +1,10 @@
 {
     "name": "ajvolin/uhoh-service-check-providers",
-    "description": "A package for implementing service checkers for UhOh",
+    "description": "A package for implementing service check providers for UhOh",
     "keywords": [
         "UhOh",
         "Uptime",
+        "Uptime Monitor",
         "Server monitor",
         "Big brother",
         "Sysmon",

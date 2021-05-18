@@ -2,16 +2,16 @@
 
 namespace UhOh\ServiceCheckProvider\Contracts;
 
-use UhOh\ServiceCheckProvider\Models\ServiceCheckProviderConfiguration;
-use UhOh\ServiceCheckProvider\Models\ServiceCheckResult;
+use UhOh\ServiceCheckProvider\Configuration\Configuration;
+use UhOh\ServiceCheckProvider\Result\Result;
 
 interface CheckableService
 {
     /**
      * Executes the service check.
      *
-     * @param ?ServiceCheckProviderConfiguration $configuration The configuration for the service check provider
-     * @return ServiceCheckResult
+     * @param ?Configuration $configuration The configuration for the service check provider
+     * @return Result
      */
-    public function fire(?ServiceCheckProviderConfiguration $configuration = null): ServiceCheckResult;
+    public function fire(?Configuration $configuration = null): Result;
 }

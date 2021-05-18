@@ -1,18 +1,18 @@
 <?php
 
-namespace UhOh\ServiceCheckProvider\Models;
+namespace UhOh\ServiceCheckProvider\Result;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
-use UhOh\ServiceCheckProvider\Models\ServiceCheckResultDetails;
+use UhOh\ServiceCheckProvider\Result\ResultDetails;
 
 /**
- * Class ServiceCheckResult
+ * Class Result
  * @package UhOh/ServiceCheckProviders
  *
  */
 
-class ServiceCheckResult implements Arrayable, Jsonable
+class Result implements Arrayable, Jsonable
 {
     /**
      * The status of the service
@@ -38,22 +38,22 @@ class ServiceCheckResult implements Arrayable, Jsonable
     /**
      *  Result details
      * 
-     * @var ServiceCheckResultDetails
+     * @var ResultDetails
      */
-	private ?ServiceCheckResultDetails $resultDetails;
+	private ?ResultDetails $resultDetails;
     
     /**
-     * ServiceCheckResult constructor.
+     * Result constructor.
      *
      * @param int $status The status of the service check
      * @param string $formattedResult The formatted service check result
      * @param string $rawResult The raw service check result
-     * @param ?ServiceCheckResultDetails $resultDetails Service check result details
+     * @param ResultDetails|null $resultDetails Service check result details
      */
     public function __construct(int $status,
                                 string $formattedResult,
                                 string $rawResult,
-                                ?ServiceCheckResultDetails $resultDetails = null)
+                                ?ResultDetails $resultDetails = null)
     {
         $this->status = $status;
         $this->formattedResult = $formattedResult;
@@ -94,9 +94,9 @@ class ServiceCheckResult implements Arrayable, Jsonable
     /**
      * Get the raw result of the service check
      * 
-     * @return ServiceCheckResultDetails
+     * @return ResultDetails
      */
-	public function getResultDetails(): ServiceCheckResultDetails
+	public function getResultDetails(): ResultDetails
     {
         return $this->resultDetails;    
     }
@@ -108,17 +108,14 @@ class ServiceCheckResult implements Arrayable, Jsonable
      */
 	public function toArray(): array
     {
-        $arr = [
+        return [
             'status' => $this->status,
             'formatted_result' => $this->formattedResult,
-            'raw_result' => $this->rawResult
+            'raw_result' => $this->rawResult,
+            'result_details' =>
+                !is_null($this->resultDetails) ?
+                    $this->resultDetails->toArray() : null
         ];
-
-        if (!is_null($this->resultDetails)) {
-            $arr['result_details'] = $this->resultDetails->toArray();
-        }
-        
-        return $arr;
     }
 
     /**
