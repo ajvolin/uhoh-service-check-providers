@@ -75,13 +75,6 @@ abstract class Field implements Arrayable, Jsonable
      */
     public bool $required;
 
-    /** 
-     * Bind field to other field value
-     * 
-     * @var array
-     */
-    public array $bindToFieldValue;
-
     /**
      * The constructor for the Field class
      * 
