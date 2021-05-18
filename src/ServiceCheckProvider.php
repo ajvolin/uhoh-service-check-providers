@@ -6,9 +6,12 @@ use UhOh\ServiceCheckProvider\Contracts\CheckableService;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use UhOh\ServiceCheckProvider\Configuration\ConfigurationFields;
+use UhOh\ServiceCheckProvider\Helpers\ToJsonTrait;
 
 class ServiceCheckProvider implements Arrayable, Jsonable
 {
+    use ToJsonTrait;
+    
     /**
      * @var string
      */
@@ -109,16 +112,5 @@ class ServiceCheckProvider implements Arrayable, Jsonable
             'configuration_fields' =>
                 $this->configurationFields->toArray()
         ];
-    }
-
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0): string
-    {
-        return json_encode($this->toArray(), $options);
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use ReflectionObject;
 use ReflectionProperty;
+use UhOh\ServiceCheckProvider\Helpers\ToJsonTrait;
 
 /**
  * Class Field
@@ -16,6 +17,8 @@ use ReflectionProperty;
  */
 abstract class Field implements Arrayable, Jsonable
 {
+    use ToJsonTrait;
+    
     /**
      * Field key (unique identifier)
      * 
@@ -145,22 +148,11 @@ abstract class Field implements Arrayable, Jsonable
         }
 
         foreach ($this->validationRules as $rule) {
-            array_push($arr['rules'], $rule->toArray());
+            $arr['rules'] = array_merge($arr['rules'], $rule->toArray());
         }
 
         ksort($arr);
 
         return $arr;
-    }
-
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0): string
-    {
-        return json_encode($this->toArray(), $options);
     }
 }

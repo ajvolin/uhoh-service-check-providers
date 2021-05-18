@@ -5,6 +5,7 @@ namespace UhOh\ServiceCheckProvider\Configuration;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use UhOh\ServiceCheckProvider\Configuration\Fields\Field;
+use UhOh\ServiceCheckProvider\Helpers\ToJsonTrait;
 
 /**
  * Class ConfigurationFieldGroup
@@ -13,6 +14,8 @@ use UhOh\ServiceCheckProvider\Configuration\Fields\Field;
  */
 class ConfigurationFieldGroup implements Arrayable, Jsonable
 {
+    use ToJsonTrait;
+    
     /**
      * Field group key (unique identifier)
      * 
@@ -38,7 +41,7 @@ class ConfigurationFieldGroup implements Arrayable, Jsonable
      * Bind visibility of field group to other fields
      * Format for array values is group_key.field_key => field value
      * where group_key starts at the top level of the configuration fields
-     * object and traversed down to the desired group/field
+     * object and traversed down to the desired field
      * 
      * @var array
      */
@@ -159,16 +162,5 @@ class ConfigurationFieldGroup implements Arrayable, Jsonable
         }
         
         return $arr;
-    }
-
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0): string
-    {
-        return json_encode($this->toArray(), $options);
     }
 }

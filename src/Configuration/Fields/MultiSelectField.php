@@ -22,12 +22,13 @@ class MultiSelectField extends SelectField
     /**
      * Constructor for MultiSelectField
      * 
+     * @param string $key The unique identifier for the field
      * @param array $options The options for the select field
      * @param int $maxOptions The maximum number of options that can be selected
      */
-    public function __construct(array $options, ?int $maxOptions = null)
+    public function __construct(string $key, array $options, ?int $maxOptions = null)
     {
-        parent::__construct($options);
+        parent::__construct($key, $options);
         if (isset($maxOptions)) {
             $this->maxOptions = $maxOptions;
 

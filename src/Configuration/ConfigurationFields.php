@@ -7,6 +7,7 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
 use UhOh\ServiceCheckProvider\Configuration\ConfigurationFieldGroup;
 use UhOh\ServiceCheckProvider\Exceptions\ServiceCheckConfigurationError;
+use UhOh\ServiceCheckProvider\Helpers\ToJsonTrait;
 
 /**
  * Class ConfigurationFields
@@ -15,6 +16,8 @@ use UhOh\ServiceCheckProvider\Exceptions\ServiceCheckConfigurationError;
  */
 class ConfigurationFields implements Arrayable, Jsonable
 {
+    use ToJsonTrait;
+
     /** 
      * Configuration field groups
      * 
@@ -22,18 +25,48 @@ class ConfigurationFields implements Arrayable, Jsonable
      */
     private array $groups = [];
 
-    // /** 
-    //  * Validates configuration
-    //  * 
-    //  * @return bool
-    //  */
-    // public function validateConfiguration(): bool
-    // {
-    //     $config = $this->toArray();
-    //     foreach ($config as $k => $v) {
+    /**
+     * Gets all bound fields in a configuration
+     * 
+     * @param ConfigurationFieldGroup[] $groups The groups to search
+     * @return array Array of bound fields
+     */
+    private function getBoundFields(array $groups): array
+    {
+        $boundFields = [];
+        
+        foreach($groups as $group) {
+            $boundFields = array_merge(
+                $boundFields,
+                $group->bindGroupToFieldValue,
+                $this->getBoundFields($group->nestedGroups)
+            );
+        }
 
-    //     }
-    // }
+        return $boundFields;
+    }
+
+    /** 
+     * Validates configuration
+     * 
+     * @return bool
+     */
+    public function validateConfiguration(): bool
+    {
+        $error = false;
+
+        $boundFields = $this->getBoundFields($this->groups);
+        $config = Arr::dot($this->toArray());
+        
+        foreach ($boundFields as $field) {
+            if (!Arr::has($config, $boundFields)) {
+                $error = true;
+                break;
+            }
+        }
+
+        return $error;
+    }
 
     /**
      * Adds a group to the configuration
@@ -52,11 +85,11 @@ class ConfigurationFields implements Arrayable, Jsonable
      */
     public function getGroups(): array
     {
-        // if (!$this->validateConfiguration()) {
-        //     throw new ServiceCheckConfigurationError(
-        //         "The configuration fields are invalid. This is caused by invalid binds to field paths."
-        //     );
-        // }
+        if (!$this->validateConfiguration()) {
+            throw new ServiceCheckConfigurationError(
+                "The configuration fields are invalid. This is caused by invalid binds to field paths."
+            );
+        }
         return $this->groups;
     }
 
@@ -70,20 +103,9 @@ class ConfigurationFields implements Arrayable, Jsonable
         $arr = [];
 
         foreach($this->groups as $group) {
-            $arr[$group->getKey()] = $group->toArray();
+            $arr[$group->key] = $group->toArray();
         }
         
         return $arr;
-    }
-
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0): string
-    {
-        return json_encode($this->toArray(), $options);
     }
 }

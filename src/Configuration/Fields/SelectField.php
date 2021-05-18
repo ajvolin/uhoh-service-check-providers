@@ -28,10 +28,12 @@ class SelectField extends Field
     /**
      * Constructor for SelectField
      * 
+     * @param string $key The unique identifier for the field
      * @param array $options The options for the select field
      */
-    public function __construct(array $options)
+    public function __construct(string $key, array $options)
     {
+        parent::__construct($key);
         $this->options = $options;
     }
 }

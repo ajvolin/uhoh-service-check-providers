@@ -6,9 +6,12 @@ use UhOh\ServiceCheckProvider\ServiceCheckProvider;
 use UhOh\ServiceCheckProvider\Exceptions\ServiceCheckProviderException;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use UhOh\ServiceCheckProvider\Helpers\ToJsonTrait;
 
 class ServiceCheckProviders implements Arrayable, Jsonable
 {
+    use ToJsonTrait;
+
     /**
      * Array of registered service check providers
      * 
@@ -81,16 +84,5 @@ class ServiceCheckProviders implements Arrayable, Jsonable
         }
 
         return $arr;
-    }
-
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0): string
-    {
-        return json_encode($this->toArray(), $options);
     }
 }

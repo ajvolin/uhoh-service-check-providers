@@ -7,6 +7,7 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Str;
 use ReflectionObject;
 use ReflectionProperty;
+use UhOh\ServiceCheckProvider\Helpers\ToJsonTrait;
 
 /**
  * Class Rule
@@ -15,6 +16,8 @@ use ReflectionProperty;
  */
 abstract class Rule implements Arrayable, Jsonable
 {
+    use ToJsonTrait;
+    
     /**
      * Validation rule name
      * 
@@ -45,16 +48,5 @@ abstract class Rule implements Arrayable, Jsonable
         ksort($arr);
 
         return $arr;
-    }
-
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0): string
-    {
-        return json_encode($this->toArray(), $options);
     }
 }

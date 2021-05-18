@@ -53,12 +53,14 @@ class NumberField extends Field
     /**
      * Constructor for NumberField
      * 
+     * @param string $key The unique identifier for the field
      * @param int $minNumber The minimum number that can be entered
      * @param int $maxNumber The maximum number that can be entered
      * @param int $step The number to increment by
      */
-    public function __construct(int $minNumber, int $maxNumber, int $step)
+    public function __construct(string $key, int $minNumber, int $maxNumber, int $step)
     {
+        parent::__construct($key);
         $this->minNumber = $minNumber;
         $this->maxNumber = $maxNumber;
         $this->step = $step;

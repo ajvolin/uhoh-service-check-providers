@@ -5,6 +5,7 @@ namespace UhOh\ServiceCheckProvider\Result;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use UhOh\ServiceCheckProvider\Exceptions\ServiceCheckResultDetailError;
+use UhOh\ServiceCheckProvider\Helpers\ToJsonTrait;
 use UhOh\ServiceCheckProvider\Result\ResultDetail;
 
 /**
@@ -15,6 +16,8 @@ use UhOh\ServiceCheckProvider\Result\ResultDetail;
 
 class ResultDetails implements Arrayable, Jsonable
 {
+    use ToJsonTrait;
+
     /**
      * Array of service check result details
      * 
@@ -76,16 +79,5 @@ class ResultDetails implements Arrayable, Jsonable
         }
 
         return $arr;
-    }
-
-    /**
-     * Convert the object to its JSON representation.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0): string
-    {
-        return json_encode($this->toArray(), $options);
     }
 }
