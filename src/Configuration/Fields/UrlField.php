@@ -3,6 +3,7 @@
 namespace UhOh\ServiceCheckProvider\Configuration\Fields;
 
 use UhOh\ServiceCheckProvider\Configuration\Fields\Field;
+use UhOh\ServiceCheckProvider\Configuration\Validation\Url;
 
 /**
  * Class UrlField
@@ -17,4 +18,13 @@ class UrlField extends Field
      * @var string
      */
     protected string $type = 'url';
+
+    /**
+     * Validation rules
+     * 
+     * @var Rule[]
+     */
+    protected array $validationRules = [
+        new Url
+    ];
 }

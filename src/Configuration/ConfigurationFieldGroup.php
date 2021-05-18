@@ -18,7 +18,7 @@ class ConfigurationFieldGroup implements Arrayable, Jsonable
      * 
      * @var string
      */
-    public string $key;
+    private string $key;
 
     /** 
      * Field group label (optional)
@@ -35,11 +35,14 @@ class ConfigurationFieldGroup implements Arrayable, Jsonable
     public ?string $description;
 
     /** 
-     * Bind visibility of field group to other field value(s)
+     * Bind visibility of field group to other fields
+     * Format for array values is group_key.field_key => field value
+     * where group_key starts at the top level of the configuration fields
+     * object and traversed down to the desired group/field
      * 
      * @var array
      */
-    public array $bindGroupToFieldValue;
+    public array $bindGroupToFieldValue = [];
 
     /**
      * Field group is duplicable, i.e. multiple rows of same fields
@@ -60,7 +63,24 @@ class ConfigurationFieldGroup implements Arrayable, Jsonable
      * 
      * @var Field[]
      */
-    public array $fields;
+    public array $fields = [];
+
+    /** 
+     * Nested field groups
+     * 
+     * @var ConfigurationFieldGroup[]
+     */
+    public array $nestedGroups = [];
+
+    /**
+     * The constructor for the ConfigurationFieldGroup class
+     * 
+     * @param string $key The unique identifier for the field group
+     */
+    public function __construct(string $key)
+    {
+        $this->key = $key;
+    }
 
     /**
      * Adds a field to the group
@@ -83,6 +103,36 @@ class ConfigurationFieldGroup implements Arrayable, Jsonable
     }
 
     /**
+     * Gets the group key
+     * 
+     * @return string
+     */
+    public function getKey(): string
+    {
+        return $this->key;
+    }
+
+    /**
+     * Adds a nested group to the current group
+     * 
+     * @param ConfigurationFieldGroup $group
+     */
+    public function addNestedGroup(ConfigurationFieldGroup $group): void
+    {
+        array_push($this->nestedGroups, $group);
+    }
+
+    /**
+     * Gets the nested field groups in the current group
+     * 
+     * @return ConfigurationFieldGroup[]
+     */
+    public function getNestedGroups(): array
+    {
+        return $this->nestedGroups;
+    }
+
+    /**
      * Convert the object to an array.
      *
      * @return array
@@ -91,16 +141,21 @@ class ConfigurationFieldGroup implements Arrayable, Jsonable
     {
         $arr = [
             'key' => $this->key,
-            'label' => $this->label,
-            'description' => $this->description,
-            'bind_to_field' => $this->bindGroupToFieldValue,
+            'label' => $this->label ?? null,
+            'description' => $this->description ?? null,
+            'bind_to' => $this->bindGroupToFieldValue,
             'is_duplicable' => $this->isDuplicable,
-            'max_duplicates' => $this->maxDuplicates,
-            'fields' => []
+            'max_duplicates' => $this->maxDuplicates ?? 0,
+            'fields' => [],
+            'groups' => []
         ];
 
         foreach($this->fields as $field) {
-            array_push($arr['fields'], $field);
+            $arr['fields'][$field->getKey()] = $field->toArray();
+        }
+
+        foreach($this->nestedGroups as $group) {
+            $arr['groups'][$group->getKey()] = $group->toArray();
         }
         
         return $arr;

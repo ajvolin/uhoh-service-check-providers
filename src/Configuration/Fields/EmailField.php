@@ -3,6 +3,7 @@
 namespace UhOh\ServiceCheckProvider\Configuration\Fields;
 
 use UhOh\ServiceCheckProvider\Configuration\Fields\Field;
+use UhOh\ServiceCheckProvider\Configuration\Validation\Email;
 
 /**
  * Class EmailField
@@ -17,4 +18,13 @@ class EmailField extends Field
      * @var string
      */
     protected string $type = 'email';
+
+    /**
+     * Validation rules
+     * 
+     * @var Rule[]
+     */
+    protected array $validationRules = [
+        new Email
+    ];
 }

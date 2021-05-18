@@ -24,4 +24,14 @@ class SelectField extends Field
      * @var array
      */
     public array $options;
+
+    /**
+     * Constructor for SelectField
+     * 
+     * @param array $options The options for the select field
+     */
+    public function __construct(array $options)
+    {
+        $this->options = $options;
+    }
 }

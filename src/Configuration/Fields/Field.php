@@ -4,6 +4,7 @@ namespace UhOh\ServiceCheckProvider\Configuration\Fields;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use ReflectionObject;
 use ReflectionProperty;
@@ -16,6 +17,13 @@ use ReflectionProperty;
 abstract class Field implements Arrayable, Jsonable
 {
     /**
+     * Field key (unique identifier)
+     * 
+     * @var string
+     */
+    private string $key;
+
+    /**
      * Field type
      * 
      * @var string
@@ -23,11 +31,11 @@ abstract class Field implements Arrayable, Jsonable
     protected string $type;
 
     /**
-     * Field key (unique identifier)
+     * Validation rules
      * 
-     * @var string
+     * @var Rule[]
      */
-    public string $key;
+    protected array $validationRules = [];
 
     /** 
      * Field label
@@ -72,11 +80,44 @@ abstract class Field implements Arrayable, Jsonable
     public array $bindToFieldValue;
 
     /**
-     * Validation rules
+     * The constructor for the Field class
      * 
-     * @var array
+     * @param string $key The unique identifier for the field
      */
-    public array $validationRules;
+    public function __construct(string $key)
+    {
+        $this->key = $key;
+    }
+
+    /**
+     * Gets the field key
+     * 
+     * @return string
+     */
+    public function getKey(): string
+    {
+        return $this->key;
+    }
+
+    /**
+     * Adds a validation rule for the field
+     * 
+     * @param Rule $rule The rule to add
+     */
+    public function addRule($rule): void
+    {
+        array_push($this->validationRules, $rule);
+    }
+
+    /**
+     * Gets the validation rules for the field
+     * 
+     * @return Rule[]
+     */
+    public function getRules(): array
+    {
+        return $this->validationRules;
+    }
 
      /**
      * Convert the object to an array.
@@ -86,8 +127,11 @@ abstract class Field implements Arrayable, Jsonable
 	public function toArray(): array
     {
         $arr = [
-            'type' => $this->type
+            'type' => $this->type,
+            'key' => $this->key,
+            'rules' => []
         ];
+
         $props = (new ReflectionObject($this))->getProperties(ReflectionProperty::IS_PUBLIC);
 
         foreach ($props as $prop) {
@@ -98,6 +142,10 @@ abstract class Field implements Arrayable, Jsonable
             } else {
                 $arr[$propNameArrayKey] = null;
             }
+        }
+
+        foreach ($this->validationRules as $rule) {
+            array_push($arr['rules'], $rule->toArray());
         }
 
         ksort($arr);

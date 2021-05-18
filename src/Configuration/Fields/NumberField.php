@@ -3,6 +3,8 @@
 namespace UhOh\ServiceCheckProvider\Configuration\Fields;
 
 use UhOh\ServiceCheckProvider\Configuration\Fields\Field;
+use UhOh\ServiceCheckProvider\Configuration\Validation\Between;
+use UhOh\ServiceCheckProvider\Configuration\Validation\Numeric;
 
 /**
  * Class NumberField
@@ -38,4 +40,29 @@ class NumberField extends Field
      * @var int
      */
     public int $step;
+
+    /**
+     * Validation rules
+     * 
+     * @var Rule[]
+     */
+    protected array $validationRules = [
+        new Numeric
+    ];
+
+    /**
+     * Constructor for NumberField
+     * 
+     * @param int $minNumber The minimum number that can be entered
+     * @param int $maxNumber The maximum number that can be entered
+     * @param int $step The number to increment by
+     */
+    public function __construct(int $minNumber, int $maxNumber, int $step)
+    {
+        $this->minNumber = $minNumber;
+        $this->maxNumber = $maxNumber;
+        $this->step = $step;
+
+        $this->addRule(new Between($minNumber, $maxNumber));
+    }
 }

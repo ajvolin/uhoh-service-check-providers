@@ -4,7 +4,9 @@ namespace UhOh\ServiceCheckProvider\Configuration;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Support\Arr;
 use UhOh\ServiceCheckProvider\Configuration\ConfigurationFieldGroup;
+use UhOh\ServiceCheckProvider\Exceptions\ServiceCheckConfigurationError;
 
 /**
  * Class ConfigurationFields
@@ -18,12 +20,25 @@ class ConfigurationFields implements Arrayable, Jsonable
      * 
      * @var ConfigurationFieldGroup[]
      */
-    public array $groups;
+    private array $groups = [];
+
+    // /** 
+    //  * Validates configuration
+    //  * 
+    //  * @return bool
+    //  */
+    // public function validateConfiguration(): bool
+    // {
+    //     $config = $this->toArray();
+    //     foreach ($config as $k => $v) {
+
+    //     }
+    // }
 
     /**
      * Adds a group to the configuration
      * 
-     * @param  $group
+     * @param ConfigurationFieldGroup $group
      */
     public function addGroup(ConfigurationFieldGroup $group): void
     {
@@ -35,9 +50,14 @@ class ConfigurationFields implements Arrayable, Jsonable
      * 
      * @return ConfigurationFieldGroup[]
      */
-    public function getGroup(): array
+    public function getGroups(): array
     {
-        return $this->group;
+        // if (!$this->validateConfiguration()) {
+        //     throw new ServiceCheckConfigurationError(
+        //         "The configuration fields are invalid. This is caused by invalid binds to field paths."
+        //     );
+        // }
+        return $this->groups;
     }
 
     /**
@@ -50,7 +70,7 @@ class ConfigurationFields implements Arrayable, Jsonable
         $arr = [];
 
         foreach($this->groups as $group) {
-            $arr[$group->key] = $group->toArray();
+            $arr[$group->getKey()] = $group->toArray();
         }
         
         return $arr;
