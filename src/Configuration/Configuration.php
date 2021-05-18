@@ -7,7 +7,6 @@ namespace UhOh\ServiceCheckProvider\Configuration;
  * @package UhOh/ServiceCheckProviders
  *
  */
-
 class Configuration
 {
     /**

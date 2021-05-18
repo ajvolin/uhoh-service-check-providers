@@ -5,6 +5,7 @@ namespace UhOh\ServiceCheckProvider;
 use UhOh\ServiceCheckProvider\Contracts\CheckableService;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use UhOh\ServiceCheckProvider\Configuration\ConfigurationFields;
 
 class ServiceCheckProvider implements Arrayable, Jsonable
 {
@@ -105,7 +106,8 @@ class ServiceCheckProvider implements Arrayable, Jsonable
         return [
             'name' => $this->name,
             'display_name' => $this->displayName,
-            'configuration_fields' => $this->configurationFields
+            'configuration_fields' =>
+                $this->configurationFields->toArray()
         ];
     }
 
