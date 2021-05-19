@@ -10,7 +10,7 @@ interface CheckableService
     /**
      * Executes the service check.
      *
-     * @param ?Configuration $configuration The configuration for the service check provider
+     * @param Configuration|null $configuration The configuration for the service check provider
      * @return Result
      */
     public function fire(?Configuration $configuration = null): Result;
